@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CSS 顏色完整參考 | CG100</title>
+  <style>
+    :root {
+      --bg: #f0f4f8;
+      --card-bg: #ffffff;
+      --text: #1a202c;
+      --sub: #4a5568;
+      --border: #e2e8f0;
+      --accent: #4f46e5;
+      --header-bg: linear-gradient(135deg, #4f46e5, #7c3aed);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* ── Header ── */
+    header { background: var(--header-bg); color: #fff; padding: 1.6rem 1.5rem 1.2rem; text-align: center; }
+    header h1 { font-size: 1.9rem; font-weight: 700; letter-spacing: 1px; }
+    header p  { margin-top: .3rem; font-size: .9rem; opacity: .85; }
+
+    /* ── Tab Bar ── */
+    .tab-bar {
+      display: flex; justify-content: center; gap: 0;
+      background: var(--card-bg);
+      border-bottom: 2px solid var(--border);
+      position: sticky; top: 0; z-index: 200;
+      box-shadow: 0 2px 8px rgba(0,0,0,.07);
+      overflow-x: auto;
+    }
+    .tab-btn {
+      padding: .85rem 1.6rem; border: none; background: none;
+      font-size: .92rem; font-weight: 600; color: var(--sub);
+      cursor: pointer; border-bottom: 3px solid transparent;
+      transition: all .2s; white-space: nowrap;
+    }
+    .tab-btn:hover { color: var(--accent); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* ── Tab Panels ── */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Controls ── */
+    .controls {
+      display: flex; flex-wrap: wrap; gap: .75rem;
+      justify-content: center; align-items: center;
+      padding: 1rem 1.5rem;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+    }
+    .controls input[type="text"] {
+      padding: .52rem 1rem; border: 1px solid var(--border);
+      border-radius: 999px; font-size: .88rem; width: 210px;
+      outline: none; transition: border-color .2s; background: var(--bg); color: var(--text);
+    }
+    .controls input[type="text"]:focus { border-color: var(--accent); }
+    .controls select {
+      padding: .5rem .85rem; border: 1px solid var(--border);
+      border-radius: 999px; font-size: .88rem;
+      background: var(--bg); color: var(--text); cursor: pointer;
+    }
+    .controls label { font-size: .85rem; color: var(--sub); display:flex; align-items:center; gap:.35rem; }
+    .result-count { font-size: .82rem; color: var(--sub); }
+
+    /* ── Category Nav ── */
+    .cat-nav {
+      display: flex; flex-wrap: wrap; gap: .45rem;
+      justify-content: center; padding: .8rem 1.5rem;
+      background: var(--bg);
+    }
+    .cat-btn {
+      padding: .32rem .75rem; border-radius: 999px;
+      border: 1px solid var(--border); background: var(--card-bg);
+      font-size: .8rem; cursor: pointer; transition: all .2s; color: var(--sub);
+    }
+    .cat-btn:hover, .cat-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    /* ── Grid ── */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: .9rem; padding: 1rem 1.5rem 3rem;
+      max-width: 1400px; margin: 0 auto;
+    }
+    .grid-container.web16 { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+    .grid-container.web216 { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: .6rem; }
+
+    /* ── Color Card ── */
+    .color-card {
+      background: var(--card-bg); border-radius: 12px; overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,.08); cursor: pointer;
+      transition: transform .18s, box-shadow .18s; position: relative;
+    }
+    .color-card:hover { transform: translateY(-4px); box-shadow: 0 6px 20px rgba(0,0,0,.14); }
+    .color-swatch { height: 85px; width: 100%; }
+    .grid-container.web216 .color-swatch { height: 60px; }
+    .grid-container.web16 .color-swatch { height: 110px; }
+    .color-info { padding: .55rem .7rem .6rem; }
+    .color-name { font-size: .82rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .color-hex  { font-size: .75rem; color: var(--sub); font-family: 'Courier New', monospace; margin-top: .12rem; }
+    .color-rgb  { font-size: .7rem; color: #90a0b7; margin-top: .08rem; }
+    .copy-badge {
+      position: absolute; top: 6px; right: 6px;
+      background: rgba(0,0,0,.4); color: #fff;
+      font-size: .66rem; padding: 2px 7px; border-radius: 999px;
+      opacity: 0; transition: opacity .15s; pointer-events: none;
+    }
+    .color-card:hover .copy-badge { opacity: 1; }
+
+    /* ── 16色 特別樣式 ── */
+    .badge-16 {
+      display: inline-block; font-size: .68rem; background: #fbbf24;
+      color: #78350f; border-radius: 4px; padding: 1px 6px; margin-top: .2rem;
+    }
+
+    /* ── 216色 色相群組 ── */
+    .hue-section { padding: .6rem 1.5rem .2rem; max-width: 1400px; margin: 0 auto; }
+    .hue-title { font-size: .85rem; font-weight: 600; color: var(--sub); margin-bottom: .4rem; }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed; bottom: 1.5rem; left: 50%;
+      transform: translateX(-50%) translateY(60px);
+      background: #1a202c; color: #fff;
+      padding: .55rem 1.3rem; border-radius: 999px; font-size: .86rem;
+      opacity: 0; transition: transform .3s, opacity .3s; z-index: 9999; pointer-events: none;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── Modal ── */
+    #modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.45); z-index: 500;
+      align-items: center; justify-content: center;
+    }
+    #modal-overlay.open { display: flex; }
+    #modal {
+      background: var(--card-bg); border-radius: 16px; padding: 1.8rem;
+      width: min(380px, 92vw); position: relative;
+      box-shadow: 0 12px 40px rgba(0,0,0,.2);
+    }
+    #modal-close { position: absolute; top: .7rem; right: .9rem; font-size: 1.3rem; cursor: pointer; color: var(--sub); background: none; border: none; }
+    #modal-swatch { height: 110px; border-radius: 10px; margin-bottom: 1.1rem; }
+    #modal-title  { font-size: 1.25rem; font-weight: 700; color: var(--text); }
+    .modal-row { display: flex; justify-content: space-between; align-items: center; padding: .42rem 0; border-bottom: 1px solid var(--border); }
+    .modal-row:last-of-type { border: none; }
+    .modal-label { font-size: .8rem; color: var(--sub); font-weight: 500; }
+    .modal-val   { font-size: .85rem; font-family: monospace; color: var(--text); }
+    .copy-btn {
+      margin-top: .9rem; width: 100%; padding: .58rem;
+      background: var(--accent); color: #fff; border: none;
+      border-radius: 8px; font-size: .88rem; cursor: pointer; transition: background .2s;
+    }
+    .copy-btn:hover { background: #4338ca; }
+
+    /* ── Intro Card ── */
+    .intro-card {
+      max-width: 900px; margin: 1.2rem auto .2rem;
+      background: var(--card-bg); border-radius: 12px;
+      padding: 1.1rem 1.5rem; margin-left: 1.5rem; margin-right: 1.5rem;
+      border-left: 4px solid var(--accent); font-size: .9rem; color: var(--sub);
+      line-height: 1.7;
+    }
+    .intro-card strong { color: var(--text); }
+
+    .no-result { text-align: center; padding: 3rem; color: var(--sub); grid-column: 1/-1; }
+
+    @media (max-width: 500px) {
+      .grid-container { grid-template-columns: repeat(auto-fill, minmax(130px,1fr)); }
+      .tab-btn { padding: .7rem .9rem; font-size: .82rem; }
+      header h1 { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🎨 CSS 顏色完整參考 | CG100</h1>
+  <p>16 基本色 &nbsp;·&nbsp; 140 命名色 &nbsp;·&nbsp; 216 網頁安全色 &nbsp;｜&nbsp; 點擊色卡複製色碼</p>
+</header>
+
+<!-- Tab Bar -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('t16',this)">🟥 16 種基本顏色</button>
+  <button class="tab-btn" onclick="switchTab('t140',this)">🎨 140 CSS 命名顏色</button>
+  <button class="tab-btn" onclick="switchTab('t216',this)">🌈 216 網頁安全色</button>
+  <label style="padding:.85rem 1rem;font-size:.82rem;color:var(--sub);display:flex;align-items:center;gap:.35rem;margin-left:auto;">
+    <input type="checkbox" id="dark-mode" onchange="toggleDark()"> 深色
+  </label>
+</div>
+
+<!-- ════════════════════════════════════════════
+     TAB 1 : 16 Basic Colors
+════════════════════════════════════════════ -->
+<div class="tab-panel active" id="t16">
+  <div class="intro-card">
+    <strong>16 種基本 HTML 顏色</strong>：這是 HTML 4.01 標準最早定義的 16 個顏色名稱，由 VGA 調色盤衍生而來，每個瀏覽器都完整支援。直接用顏色英文名稱即可套用，例如 <code>color: red;</code>
+  </div>
+  <div class="grid-container web16" id="grid16"></div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     TAB 2 : 140 CSS Named Colors
+════════════════════════════════════════════ -->
+<div class="tab-panel" id="t140">
+  <div class="controls">
+    <input type="text" id="search140" placeholder="🔍 搜尋顏色名稱或色碼…" oninput="filter140()"/>
+    <select id="sort140" onchange="filter140()">
+      <option value="name">依名稱排序</option>
+      <option value="hue">依色相排序</option>
+      <option value="brightness">依亮度排序</option>
+    </select>
+    <span class="result-count" id="count140"></span>
+  </div>
+  <div class="cat-nav" id="cat-nav140">
+    <button class="cat-btn active" onclick="setCat140('all',this)">全部</button>
+    <button class="cat-btn" onclick="setCat140('Red',this)">🔴 紅</button>
+    <button class="cat-btn" onclick="setCat140('Pink',this)">🩷 粉</button>
+    <button class="cat-btn" onclick="setCat140('Orange',this)">🟠 橙</button>
+    <button class="cat-btn" onclick="setCat140('Yellow',this)">🟡 黃</button>
+    <button class="cat-btn" onclick="setCat140('Green',this)">🟢 綠</button>
+    <button class="cat-btn" onclick="setCat140('Cyan',this)">🩵 青</button>
+    <button class="cat-btn" onclick="setCat140('Blue',this)">🔵 藍</button>
+    <button class="cat-btn" onclick="setCat140('Purple',this)">🟣 紫</button>
+    <button class="cat-btn" onclick="setCat140('Brown',this)">🟤 棕</button>
+    <button class="cat-btn" onclick="setCat140('White',this)">⬜ 白</button>
+    <button class="cat-btn" onclick="setCat140('Gray',this)">⬛ 灰黑</button>
+  </div>
+  <div class="grid-container" id="grid140"></div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     TAB 3 : 216 Web Safe Colors
+════════════════════════════════════════════ -->
+<div class="tab-panel" id="t216">
+  <div class="intro-card">
+    <strong>216 種網頁安全色（Web Safe Colors）</strong>：由紅、綠、藍各取 <code>00、33、66、99、CC、FF</code> 六個值組合而成（6×6×6＝216），在早期 256 色螢幕時代所有瀏覽器均能正確顯示。現代螢幕雖不再受限，這些顏色仍是設計的可靠基準色盤。
+  </div>
+  <div class="controls">
+    <input type="text" id="search216" placeholder="🔍 搜尋 HEX 色碼…" oninput="filter216()"/>
+    <select id="sort216" onchange="filter216()">
+      <option value="hue">依色相排序</option>
+      <option value="brightness">依亮度排序</option>
+      <option value="hex">依 HEX 排序</option>
+    </select>
+    <span class="result-count" id="count216"></span>
+  </div>
+  <div id="grid216-wrap"></div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- Modal -->
+<div id="modal-overlay" onclick="closeModal(event)">
+  <div id="modal">
+    <button id="modal-close" onclick="closeModal()">✕</button>
+    <div id="modal-swatch"></div>
+    <div id="modal-title"></div>
+    <div id="modal-rows"></div>
+    <button class="copy-btn" id="copy-hex-btn">複製 HEX 色碼</button>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════
+// DATA
+// ════════════════════════════════════
+
+// 16 Basic Colors
+const colors16 = [
+  {name:"Black",   hex:"#000000"},{name:"Silver",  hex:"#C0C0C0"},
+  {name:"Gray",    hex:"#808080"},{name:"White",   hex:"#FFFFFF"},
+  {name:"Maroon",  hex:"#800000"},{name:"Red",     hex:"#FF0000"},
+  {name:"Purple",  hex:"#800080"},{name:"Fuchsia", hex:"#FF00FF"},
+  {name:"Green",   hex:"#008000"},{name:"Lime",    hex:"#00FF00"},
+  {name:"Olive",   hex:"#808000"},{name:"Yellow",  hex:"#FFFF00"},
+  {name:"Navy",    hex:"#000080"},{name:"Blue",    hex:"#0000FF"},
+  {name:"Teal",    hex:"#008080"},{name:"Aqua",    hex:"#00FFFF"},
+];
+
+// 140 CSS Named Colors
+const colors140 = [
+  {name:"IndianRed",hex:"#CD5C5C",cat:"Red"},{name:"LightCoral",hex:"#F08080",cat:"Red"},
+  {name:"Salmon",hex:"#FA8072",cat:"Red"},{name:"DarkSalmon",hex:"#E9967A",cat:"Red"},
+  {name:"LightSalmon",hex:"#FFA07A",cat:"Orange"},{name:"Crimson",hex:"#DC143C",cat:"Red"},
+  {name:"Red",hex:"#FF0000",cat:"Red"},{name:"FireBrick",hex:"#B22222",cat:"Red"},
+  {name:"DarkRed",hex:"#8B0000",cat:"Red"},
+  {name:"Pink",hex:"#FFC0CB",cat:"Pink"},{name:"LightPink",hex:"#FFB6C1",cat:"Pink"},
+  {name:"HotPink",hex:"#FF69B4",cat:"Pink"},{name:"DeepPink",hex:"#FF1493",cat:"Pink"},
+  {name:"MediumVioletRed",hex:"#C71585",cat:"Pink"},{name:"PaleVioletRed",hex:"#DB7093",cat:"Pink"},
+  {name:"Coral",hex:"#FF7F50",cat:"Orange"},{name:"Tomato",hex:"#FF6347",cat:"Orange"},
+  {name:"OrangeRed",hex:"#FF4500",cat:"Orange"},{name:"DarkOrange",hex:"#FF8C00",cat:"Orange"},
+  {name:"Orange",hex:"#FFA500",cat:"Orange"},
+  {name:"Gold",hex:"#FFD700",cat:"Yellow"},{name:"Yellow",hex:"#FFFF00",cat:"Yellow"},
+  {name:"LightYellow",hex:"#FFFFE0",cat:"Yellow"},{name:"LemonChiffon",hex:"#FFFACD",cat:"Yellow"},
+  {name:"LightGoldenrodYellow",hex:"#FAFAD2",cat:"Yellow"},{name:"PapayaWhip",hex:"#FFEFD5",cat:"Yellow"},
+  {name:"Moccasin",hex:"#FFE4B5",cat:"Yellow"},{name:"PeachPuff",hex:"#FFDAB9",cat:"Yellow"},
+  {name:"PaleGoldenrod",hex:"#EEE8AA",cat:"Yellow"},{name:"Khaki",hex:"#F0E68C",cat:"Yellow"},
+  {name:"DarkKhaki",hex:"#BDB76B",cat:"Yellow"},
+  {name:"Lavender",hex:"#E6E6FA",cat:"Purple"},{name:"Thistle",hex:"#D8BFD8",cat:"Purple"},
+  {name:"Plum",hex:"#DDA0DD",cat:"Purple"},{name:"Violet",hex:"#EE82EE",cat:"Purple"},
+  {name:"Orchid",hex:"#DA70D6",cat:"Purple"},{name:"Fuchsia",hex:"#FF00FF",cat:"Purple"},
+  {name:"Magenta",hex:"#FF00FF",cat:"Purple"},{name:"MediumOrchid",hex:"#BA55D3",cat:"Purple"},
+  {name:"MediumPurple",hex:"#9370DB",cat:"Purple"},{name:"RebeccaPurple",hex:"#663399",cat:"Purple"},
+  {name:"BlueViolet",hex:"#8A2BE2",cat:"Purple"},{name:"DarkViolet",hex:"#9400D3",cat:"Purple"},
+  {name:"DarkOrchid",hex:"#9932CC",cat:"Purple"},{name:"DarkMagenta",hex:"#8B008B",cat:"Purple"},
+  {name:"Purple",hex:"#800080",cat:"Purple"},{name:"Indigo",hex:"#4B0082",cat:"Purple"},
+  {name:"SlateBlue",hex:"#6A5ACD",cat:"Purple"},{name:"DarkSlateBlue",hex:"#483D8B",cat:"Purple"},
+  {name:"MediumSlateBlue",hex:"#7B68EE",cat:"Purple"},
+  {name:"GreenYellow",hex:"#ADFF2F",cat:"Green"},{name:"Chartreuse",hex:"#7FFF00",cat:"Green"},
+  {name:"LawnGreen",hex:"#7CFC00",cat:"Green"},{name:"Lime",hex:"#00FF00",cat:"Green"},
+  {name:"LimeGreen",hex:"#32CD32",cat:"Green"},{name:"PaleGreen",hex:"#98FB98",cat:"Green"},
+  {name:"LightGreen",hex:"#90EE90",cat:"Green"},{name:"MediumSpringGreen",hex:"#00FA9A",cat:"Green"},
+  {name:"SpringGreen",hex:"#00FF7F",cat:"Green"},{name:"MediumSeaGreen",hex:"#3CB371",cat:"Green"},
+  {name:"SeaGreen",hex:"#2E8B57",cat:"Green"},{name:"ForestGreen",hex:"#228B22",cat:"Green"},
+  {name:"Green",hex:"#008000",cat:"Green"},{name:"DarkGreen",hex:"#006400",cat:"Green"},
+  {name:"YellowGreen",hex:"#9ACD32",cat:"Green"},{name:"OliveDrab",hex:"#6B8E23",cat:"Green"},
+  {name:"Olive",hex:"#808000",cat:"Green"},{name:"DarkOliveGreen",hex:"#556B2F",cat:"Green"},
+  {name:"MediumAquamarine",hex:"#66CDAA",cat:"Green"},{name:"DarkSeaGreen",hex:"#8FBC8B",cat:"Green"},
+  {name:"LightSeaGreen",hex:"#20B2AA",cat:"Cyan"},{name:"DarkCyan",hex:"#008B8B",cat:"Cyan"},
+  {name:"Teal",hex:"#008080",cat:"Cyan"},
+  {name:"Aqua",hex:"#00FFFF",cat:"Cyan"},{name:"Cyan",hex:"#00FFFF",cat:"Cyan"},
+  {name:"LightCyan",hex:"#E0FFFF",cat:"Cyan"},{name:"PaleTurquoise",hex:"#AFEEEE",cat:"Cyan"},
+  {name:"Aquamarine",hex:"#7FFFD4",cat:"Cyan"},{name:"Turquoise",hex:"#40E0D0",cat:"Cyan"},
+  {name:"MediumTurquoise",hex:"#48D1CC",cat:"Cyan"},{name:"DarkTurquoise",hex:"#00CED1",cat:"Cyan"},
+  {name:"CadetBlue",hex:"#5F9EA0",cat:"Blue"},{name:"SteelBlue",hex:"#4682B4",cat:"Blue"},
+  {name:"LightSteelBlue",hex:"#B0C4DE",cat:"Blue"},{name:"PowderBlue",hex:"#B0E0E6",cat:"Blue"},
+  {name:"LightBlue",hex:"#ADD8E6",cat:"Blue"},{name:"SkyBlue",hex:"#87CEEB",cat:"Blue"},
+  {name:"LightSkyBlue",hex:"#87CEFA",cat:"Blue"},{name:"DeepSkyBlue",hex:"#00BFFF",cat:"Blue"},
+  {name:"DodgerBlue",hex:"#1E90FF",cat:"Blue"},{name:"CornflowerBlue",hex:"#6495ED",cat:"Blue"},
+  {name:"RoyalBlue",hex:"#4169E1",cat:"Blue"},{name:"Blue",hex:"#0000FF",cat:"Blue"},
+  {name:"MediumBlue",hex:"#0000CD",cat:"Blue"},{name:"DarkBlue",hex:"#00008B",cat:"Blue"},
+  {name:"Navy",hex:"#000080",cat:"Blue"},{name:"MidnightBlue",hex:"#191970",cat:"Blue"},
+  {name:"Cornsilk",hex:"#FFF8DC",cat:"Brown"},{name:"BlanchedAlmond",hex:"#FFEBCD",cat:"Brown"},
+  {name:"Bisque",hex:"#FFE4C4",cat:"Brown"},{name:"NavajoWhite",hex:"#FFDEAD",cat:"Brown"},
+  {name:"Wheat",hex:"#F5DEB3",cat:"Brown"},{name:"BurlyWood",hex:"#DEB887",cat:"Brown"},
+  {name:"Tan",hex:"#D2B48C",cat:"Brown"},{name:"RosyBrown",hex:"#BC8F8F",cat:"Brown"},
+  {name:"SandyBrown",hex:"#F4A460",cat:"Brown"},{name:"Goldenrod",hex:"#DAA520",cat:"Brown"},
+  {name:"DarkGoldenrod",hex:"#B8860B",cat:"Brown"},{name:"Peru",hex:"#CD853F",cat:"Brown"},
+  {name:"Chocolate",hex:"#D2691E",cat:"Brown"},{name:"SaddleBrown",hex:"#8B4513",cat:"Brown"},
+  {name:"Sienna",hex:"#A0522D",cat:"Brown"},{name:"Brown",hex:"#A52A2A",cat:"Brown"},
+  {name:"Maroon",hex:"#800000",cat:"Brown"},
+  {name:"White",hex:"#FFFFFF",cat:"White"},{name:"Snow",hex:"#FFFAFA",cat:"White"},
+  {name:"HoneyDew",hex:"#F0FFF0",cat:"White"},{name:"MintCream",hex:"#F5FFFA",cat:"White"},
+  {name:"Azure",hex:"#F0FFFF",cat:"White"},{name:"AliceBlue",hex:"#F0F8FF",cat:"White"},
+  {name:"GhostWhite",hex:"#F8F8FF",cat:"White"},{name:"WhiteSmoke",hex:"#F5F5F5",cat:"White"},
+  {name:"SeaShell",hex:"#FFF5EE",cat:"White"},{name:"Beige",hex:"#F5F5DC",cat:"White"},
+  {name:"OldLace",hex:"#FDF5E6",cat:"White"},{name:"FloralWhite",hex:"#FFFAF0",cat:"White"},
+  {name:"Ivory",hex:"#FFFFF0",cat:"White"},{name:"AntiqueWhite",hex:"#FAEBD7",cat:"White"},
+  {name:"Linen",hex:"#FAF0E6",cat:"White"},{name:"LavenderBlush",hex:"#FFF0F5",cat:"White"},
+  {name:"MistyRose",hex:"#FFE4E1",cat:"White"},
+  {name:"Gainsboro",hex:"#DCDCDC",cat:"Gray"},{name:"LightGray",hex:"#D3D3D3",cat:"Gray"},
+  {name:"Silver",hex:"#C0C0C0",cat:"Gray"},{name:"DarkGray",hex:"#A9A9A9",cat:"Gray"},
+  {name:"Gray",hex:"#808080",cat:"Gray"},{name:"DimGray",hex:"#696969",cat:"Gray"},
+  {name:"LightSlateGray",hex:"#778899",cat:"Gray"},{name:"SlateGray",hex:"#708090",cat:"Gray"},
+  {name:"DarkSlateGray",hex:"#2F4F4F",cat:"Gray"},{name:"Black",hex:"#000000",cat:"Gray"},
+];
+
+// 216 Web Safe Colors — generate programmatically
+const steps = ['00','33','66','99','CC','FF'];
+const colors216 = [];
+for(const r of steps) for(const g of steps) for(const b of steps)
+  colors216.push('#'+r+g+b);
+
+// ════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════
+function hexToRgb(hex){
+  return { r:parseInt(hex.slice(1,3),16), g:parseInt(hex.slice(3,5),16), b:parseInt(hex.slice(5,7),16) };
+}
+function rgbToHsl(r,g,b){
+  r/=255;g/=255;b/=255;
+  const mx=Math.max(r,g,b),mn=Math.min(r,g,b);
+  let h,s,l=(mx+mn)/2;
+  if(mx===mn){h=s=0;}else{
+    const d=mx-mn; s=l>.5?d/(2-mx-mn):d/(mx+mn);
+    switch(mx){case r:h=((g-b)/d+(g<b?6:0))/6;break;case g:h=((b-r)/d+2)/6;break;case b:h=((r-g)/d+4)/6;break;}
+  }
+  return {h:Math.round(h*360),s:Math.round(s*100),l:Math.round(l*100)};
+}
+function brightness(hex){ const {r,g,b}=hexToRgb(hex); return (r*299+g*587+b*114)/1000; }
+function textColor(hex){ return brightness(hex)>128?'#111':'#eee'; }
+
+function makeCard(name, hex, extraClass=''){
+  const {r,g,b}=hexToRgb(hex);
+  return `<div class="color-card${extraClass}" onclick="openModal('${name}','${hex}',${r},${g},${b})">
+    <div class="color-swatch" style="background:${hex}"></div>
+    <span class="copy-badge">複製</span>
+    <div class="color-info">
+      <div class="color-name">${name}</div>
+      <div class="color-hex">${hex.toUpperCase()}</div>
+      <div class="color-rgb">rgb(${r},${g},${b})</div>
+    </div>
+  </div>`;
+}
+
+// ════════════════════════════════════
+// TAB 1 — 16 Colors
+// ════════════════════════════════════
+function render16(){
+  document.getElementById('grid16').innerHTML =
+    colors16.map(c=>{
+      const {r,g,b}=hexToRgb(c.hex);
+      return `<div class="color-card" onclick="openModal('${c.name}','${c.hex}',${r},${g},${b})">
+        <div class="color-swatch" style="background:${c.hex}"></div>
+        <span class="copy-badge">複製</span>
+        <div class="color-info">
+          <div class="color-name">${c.name}</div>
+          <div class="color-hex">${c.hex}</div>
+          <div class="color-rgb">rgb(${r},${g},${b})</div>
+          <span class="badge-16">HTML 基本色</span>
+        </div>
+      </div>`;
+    }).join('');
+}
+
+// ════════════════════════════════════
+// TAB 2 — 140 Colors
+// ════════════════════════════════════
+let cat140 = 'all';
+function setCat140(cat, el){
+  cat140 = cat;
+  document.querySelectorAll('#cat-nav140 .cat-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  filter140();
+}
+function filter140(){
+  const q=document.getElementById('search140').value.toLowerCase().trim();
+  const sort=document.getElementById('sort140').value;
+  let list=colors140.filter(c=>{
+    const mc=cat140==='all'||c.cat===cat140;
+    const mq=!q||c.name.toLowerCase().includes(q)||c.hex.toLowerCase().includes(q);
+    return mc&&mq;
+  });
+  if(sort==='name') list.sort((a,b)=>a.name.localeCompare(b.name));
+  else if(sort==='hue'){list.sort((a,b)=>{
+    const ha=rgbToHsl(...Object.values(hexToRgb(a.hex))).h;
+    const hb=rgbToHsl(...Object.values(hexToRgb(b.hex))).h;
+    return ha-hb;
+  });}
+  else if(sort==='brightness') list.sort((a,b)=>brightness(b.hex)-brightness(a.hex));
+  const grid=document.getElementById('grid140');
+  grid.innerHTML = list.length
+    ? list.map(c=>makeCard(c.name,c.hex)).join('')
+    : '<div class="no-result">😕 找不到符合的顏色</div>';
+  document.getElementById('count140').textContent='共 '+list.length+' 個顏色';
+}
+
+// ════════════════════════════════════
+// TAB 3 — 216 Safe Colors
+// ════════════════════════════════════
+function filter216(){
+  const q=document.getElementById('search216').value.toLowerCase().replace(/[^0-9a-f]/g,'');
+  const sort=document.getElementById('sort216').value;
+  let list=[...colors216].filter(h=>!q||h.slice(1).toLowerCase().includes(q));
+  if(sort==='brightness') list.sort((a,b)=>brightness(b)-brightness(a));
+  else if(sort==='hex') list.sort();
+  else {
+    list.sort((a,b)=>{
+      const ha=rgbToHsl(...Object.values(hexToRgb(a))).h;
+      const hb=rgbToHsl(...Object.values(hexToRgb(b))).h;
+      return ha-hb || brightness(b)-brightness(a);
+    });
+  }
+  const wrap=document.getElementById('grid216-wrap');
+  document.getElementById('count216').textContent='共 '+list.length+' 個顏色';
+  if(!list.length){ wrap.innerHTML='<div class="no-result" style="padding:2rem">😕 找不到符合的顏色</div>'; return; }
+  // Render as flat grid (no grouping when searching)
+  if(q || sort!=='hue'){
+    wrap.innerHTML=`<div class="grid-container web216">${list.map(h=>makeCard(h.toUpperCase(),h)).join('')}</div>`;
+    return;
+  }
+  // Group by hue bands when sorted by hue
+  const bands=[
+    {label:'🔴 紅色系（Red）',min:345,max:360},{label:'🔴 紅色系（Red）',min:0,max:15},
+    {label:'🟠 橙色系（Orange）',min:15,max:45},
+    {label:'🟡 黃色系（Yellow）',min:45,max:75},
+    {label:'🟢 黃綠色系（Yellow-Green）',min:75,max:105},
+    {label:'🟢 綠色系（Green）',min:105,max:150},
+    {label:'🩵 青色系（Cyan）',min:150,max:195},
+    {label:'🔵 藍綠色系（Blue-Cyan）',min:195,max:225},
+    {label:'🔵 藍色系（Blue）',min:225,max:255},
+    {label:'🟣 藍紫色系（Blue-Purple）',min:255,max:285},
+    {label:'🟣 紫色系（Purple）',min:285,max:315},
+    {label:'🩷 洋紅色系（Magenta）',min:315,max:345},
+    {label:'⬛ 無彩色（Achromatic）',min:-1,max:-1},
+  ];
+  const grouped={};
+  bands.forEach(b=>{ if(!grouped[b.label]) grouped[b.label]=[]; });
+  list.forEach(h=>{
+    const {r,g,b}=hexToRgb(h);
+    const {h:hue,s}=rgbToHsl(r,g,b);
+    if(s<8){ grouped['⬛ 無彩色（Achromatic）'].push(h); return; }
+    for(const band of bands){
+      if(band.min===-1) continue;
+      if(band.min<band.max && hue>=band.min && hue<band.max){ grouped[band.label].push(h); break; }
+      if(band.min>band.max && (hue>=band.min || hue<band.max)){ grouped[band.label].push(h); break; }
+    }
+  });
+  // Merge duplicate red band
+  const redKey='🔴 紅色系（Red）';
+  wrap.innerHTML = Object.entries(grouped)
+    .filter(([,v])=>v.length>0)
+    .map(([label,items])=>`
+      <div class="hue-section">
+        <div class="hue-title">${label} (${items.length})</div>
+      </div>
+      <div class="grid-container web216">${items.map(h=>makeCard(h.toUpperCase(),h)).join('')}</div>
+    `).join('');
+}
+
+// ════════════════════════════════════
+// MODAL
+// ════════════════════════════════════
+let currentHex='';
+function openModal(name,hex,r,g,b){
+  currentHex=hex;
+  const hsl=rgbToHsl(r,g,b);
+  document.getElementById('modal-swatch').style.background=hex;
+  document.getElementById('modal-title').textContent=name===hex.toUpperCase()?hex:name;
+  document.getElementById('modal-rows').innerHTML=`
+    <div class="modal-row"><span class="modal-label">顏色名稱</span><span class="modal-val">${name!==hex.toUpperCase()?name:'—'}</span></div>
+    <div class="modal-row"><span class="modal-label">HEX</span><span class="modal-val">${hex.toUpperCase()}</span></div>
+    <div class="modal-row"><span class="modal-label">RGB</span><span class="modal-val">rgb(${r}, ${g}, ${b})</span></div>
+    <div class="modal-row"><span class="modal-label">HSL</span><span class="modal-val">hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)</span></div>
+    <div class="modal-row"><span class="modal-label">CSS 用法</span><span class="modal-val">${name!==hex.toUpperCase()?'color: '+name.toLowerCase()+';':'color: '+hex.toUpperCase()+';'}</span></div>
+  `;
+  document.getElementById('copy-hex-btn').onclick=()=>{ copyText(hex.toUpperCase()); closeModal(); };
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal(e){
+  if(!e||e.target===document.getElementById('modal-overlay')||e.currentTarget===document.getElementById('modal-close'))
+    document.getElementById('modal-overlay').classList.remove('open');
+}
+
+// ════════════════════════════════════
+// TABS
+// ════════════════════════════════════
+function switchTab(id, el){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+
+// ════════════════════════════════════
+// COPY & TOAST
+// ════════════════════════════════════
+function copyText(text){
+  navigator.clipboard.writeText(text)
+    .then(()=>showToast('✅ 已複製：'+text))
+    .catch(()=>{ const t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);showToast('✅ 已複製：'+text); });
+}
+let toastTimer;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// ════════════════════════════════════
+// DARK MODE
+// ════════════════════════════════════
+function toggleDark(){
+  const dark=document.getElementById('dark-mode').checked;
+  const r=document.documentElement.style;
+  r.setProperty('--bg',        dark?'#0f172a':'#f0f4f8');
+  r.setProperty('--card-bg',   dark?'#1e293b':'#ffffff');
+  r.setProperty('--text',      dark?'#f1f5f9':'#1a202c');
+  r.setProperty('--sub',       dark?'#94a3b8':'#4a5568');
+  r.setProperty('--border',    dark?'#334155':'#e2e8f0');
+}
+
+// ════════════════════════════════════
+// INIT
+// ════════════════════════════════════
+render16();
+filter140();
+filter216();
+</script>
+</body>
+</html>
